@@ -63,12 +63,15 @@ a:hover { color: var(--green); }
 .status i { width: 4px; height: 4px; background: #b6a57c; border-radius: 50%; }
 .status.live i { background: #b4d78f; }
 .card-body > p { margin-top: 7px; color: var(--muted); font-size: 11px; line-height: 1.7; }
-.card-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 10px; }
-.card-actions > div { display: flex; align-items: center; gap: 14px; }
-.card-actions a { display: flex; align-items: center; gap: 5px; min-height: 26px; }
+.card-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin-top: 15px; font-size: 10px; }
+.card-actions > .secondary-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.card-actions a { display: flex; align-items: center; gap: 5px; min-height: 36px; }
 .learn-more { color: #d3dccb; }
 .learn-more span { margin-left: 4px; color: #adca98; }
-.icon-link, .visit-link { color: #b5c0ae; }
+.icon-link { color: #b5c0ae; }
+.card-actions .visit-link { justify-content: center; gap: 12px; min-height: 46px; padding: 11px 19px; border: 1px solid #bedaa6; border-radius: 8px; background: #bedaa6; color: #192713; font-size: 12px; font-weight: 700; box-shadow: 0 3px 12px #0002; transition: background .2s, box-shadow .2s; }
+.card-actions .visit-link:hover { background: #d3ebc0; border-color: #d3ebc0; box-shadow: 0 4px 16px #bedaA618; }
+.card-actions .visit-link svg { width: 18px; height: 18px; }
 .card-actions svg { width: 13px; height: 13px; }
 .closing-note { margin: 29px 0 35px; text-align: center; color: #9ca994; font-size: 10px; line-height: 1.8; }
 .closing-note span { margin-left: 5px; color: var(--green); }
@@ -108,6 +111,8 @@ footer p, footer > a:last-child { font-size: 9px; color: #9ca994; }
 .primary-button, .secondary-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #495b3e; padding: 12px 16px; border-radius: 7px; font-size: 11px; }
 .primary-button { background: #bedaa6; color: #1a2a15; border-color: #bedaa6; }
 .primary-button:hover { background: #d3ebc0; color: #1a2a15; }
+.detail-links .primary-button { min-height: 50px; padding: 14px 23px; font-size: 14px; font-weight: 700; gap: 12px; }
+.detail-links .primary-button svg { width: 19px; height: 19px; }
 .secondary-button:hover { background: #293224; }
 .primary-button svg, .secondary-button svg { width: 15px; height: 15px; }
 .pending-link { font-size: 12px; color: var(--muted); }
@@ -188,10 +193,10 @@ footer p, footer > a:last-child { font-size: 9px; color: #9ca994; }
   .card-heading h3 { font-size: 13px; }
   .status { font-size: 7px; }
   .card-body > p { font-size: 10px; margin-top: 6px; }
-  .card-actions { font-size: 9px; gap: 8px; margin-top: 7px; }
-  .card-actions > div { gap: 11px; }
-  .card-actions a { min-height: 32px; }
-  .icon-link > span { display: none; }
+  .card-actions { font-size: 10px; gap: 6px; margin-top: 12px; }
+  .card-actions > .secondary-actions { justify-content: space-between; width: 100%; gap: 12px; }
+  .card-actions a { min-height: 40px; }
+  .card-actions .visit-link { order: -1; width: 100%; min-height: 46px; padding: 11px 12px; }
   .architecture { flex-direction: column; gap: 23px; }
   .architecture li + li::before { content: '↓'; top: -21px; left: 50%; }
   .next-project h2 { font-size: 21px; }

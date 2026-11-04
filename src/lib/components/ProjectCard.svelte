@@ -19,11 +19,11 @@
     </div>
     <p>{p.description}</p>
     <div class="card-actions">
-      <a class="learn-more" href="/projetos/{p.slug}/">Saiba mais <span>→</span></a>
-      <div>
+      <div class="secondary-actions">
+        <a class="learn-more" href="/projetos/{p.slug}/">Saiba mais <span>→</span></a>
         {#if p.github}<a class="icon-link" href={p.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub de {p.name}"><Icon name="github" /><span>GitHub</span></a>{/if}
-        {#if p.url}<a class="visit-link" href={p.url} target="_blank" rel="noopener noreferrer">Visitar <Icon /></a>{/if}
       </div>
+      {#if p.url}<a class="visit-link" href={p.url} target="_blank" rel="noopener noreferrer" aria-label="Visitar projeto {p.name}">Visitar projeto <Icon /></a>{/if}
     </div>
   </div>
 </article>
