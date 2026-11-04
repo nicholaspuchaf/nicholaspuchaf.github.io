@@ -1,38 +1,41 @@
 # nicholaspuchaf.github.io
 
-Vitrine pessoal com banners, busca por nome ou tecnologia, filtros por categoria e uma página técnica para cada projeto. HTML gerado estaticamente: o conteúdo e os links funcionam mesmo sem JavaScript. JavaScript é usado apenas na busca e nos filtros.
+Portfólio em **Svelte 5 + SvelteKit + Vite**, com deploy estático no GitHub Pages. Tema escuro por padrão, coluna central no estilo Linktree, banners compactos e páginas sobre motivação, implementação, decisões, infraestrutura e system design.
 
-## Rodar
+## Desenvolvimento
 
-Requer Node.js 22 ou superior. Não há dependências para instalar.
+Requer Node.js 22.12+ (recomendado: 24) e pnpm 11.
 
 ```sh
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Abra http://localhost:3000. O comando gera o site e o serve localmente. Depois de editar os arquivos, reinicie o comando para gerar novamente.
+Abra http://localhost:3000. O Vite atualiza a página durante as edições.
 
 ```sh
-npm test
-npm run build
+pnpm check    # valida componentes Svelte
+pnpm test     # valida cadastros, filtros e rotas
+pnpm build    # gera HTML estático em dist/
+pnpm preview  # prévia em http://localhost:4173
 ```
 
 ## Adicionar ou editar projetos
 
-Edite **src/data.js**. O objeto `profile` contém o nome, a apresentação e os links pessoais. Cada objeto de `projects` gera automaticamente um card e a página `projetos/<slug>/index.html`.
+Edite **src/data.js**. O objeto `profile` contém a apresentação e os links pessoais. Cada objeto de `projects` gera um card e uma página em `/projetos/<slug>/`. A ordem dos cadastros define a ordem dos cards.
 
 ```js
 {
-  slug: 'meu-projeto', // único, minúsculo, sem espaços ou acentos
+  slug: 'meu-projeto',
   name: 'Meu projeto',
-  category: 'Ferramentas', // novas categorias viram filtros automaticamente
+  category: 'Ferramentas',
   theme: 'leaf',
   art: 'cards',
   tagline: 'Uma frase sobre a ideia.',
   description: 'Descrição curta para o card.',
-  tags: ['React', 'AWS'],
-  url: null, // ou https://... quando estiver publicado
-  github: null, // ou https://github.com/...
+  tags: ['Svelte', 'AWS'],
+  url: null,
+  github: null,
   status: 'Em desenvolvimento',
   motivation: 'Por que o projeto existe.',
   implementation: 'Como foi feito.',
@@ -43,36 +46,44 @@ Edite **src/data.js**. O objeto `profile` contém o nome, a apresentação e os 
 }
 ```
 
-`architecture` é uma visão simplificada em sequência; use uma lista vazia quando a arquitetura ainda não estiver documentada. `url: null` e `github: null` ocultam os respectivos botões sem remover o projeto. A ordem da lista define a ordem dos cards e do próximo projeto.
+Use um slug único em minúsculas, sem espaços ou acentos. A categoria aparece na página de detalhes de cada projeto. `url: null` e `github: null` ocultam os respectivos botões sem remover o projeto. Use `architecture: []` se ainda não houver desenho documentado. Os diagramas são visões simplificadas em sequência.
 
 Temas: `leaf`, `blue`, `peach`, `lime`, `space`, `lavender`, `sand`, `rose`, `mint`.
 
-Ilustrações: `cards`, `document`, `reader`, `finance`, `orbit`, `link`, `chart`, `resume`, `blog`, `music`. Para criar outro banner, adicione uma ilustração em `src/render.js` e o estilo em `public/styles.css`.
+Banners: `cards`, `document`, `reader`, `finance`, `orbit`, `link`, `chart`, `blog`, `music`. Para criar outro, edite `src/lib/components/ProjectArt.svelte` e `src/app.css`.
 
-## Deploy no GitHub Pages
+## Estrutura
 
-Este projeto está preparado para **https://nicholaspuchaf.github.io/**. O repositório no GitHub precisa se chamar exatamente **nicholaspuchaf.github.io**, na conta **nicholaspuchaf**.
+- `src/routes/+page.svelte`: lista de projetos em coluna única e apresentação pessoal ao final.
+- `src/routes/projetos/[slug]/`: páginas individuais e carregamento de dados.
+- `src/routes/+layout.svelte`: cabeçalho, rodapé e estilos globais.
+- `src/lib/components/`: cards, ilustrações e ícones reutilizáveis.
+- `src/lib/projects.js`: busca e filtragem.
+- `src/data.js`: cadastro de projetos e perfil.
+- `static/`: favicon e arquivos públicos.
 
-1. Crie o repositório `nicholaspuchaf.github.io` no GitHub (ou renomeie o repositório existente em Settings → General → Repository name).
-2. Em **Settings → Pages → Build and deployment → Source**, selecione **GitHub Actions**.
-3. Envie este código para a branch **main**. O workflow `.github/workflows/pages.yml` executa os testes, gera `dist/` e publica o artefato automaticamente.
+## GitHub Pages
 
-Para conectar este checkout, caso ainda não exista um remoto:
+Destino: **https://nicholaspuchaf.github.io/**. O repositório deve se chamar **nicholaspuchaf.github.io**, na conta **nicholaspuchaf**.
+
+1. Em **Settings → Pages → Build and deployment → Source**, selecione **GitHub Actions**.
+2. Envie o código para `main` ou `master`.
+3. Acompanhe a publicação na aba **Actions**.
+
+O workflow `.github/workflows/pages.yml` instala dependências com o lockfile, valida o Svelte, executa os testes, gera o site e publica dist/. Pull requests executam as validações sem publicar. Também é possível acionar o deploy manualmente. O workflow usa o token fornecido pelo GitHub, sem token pessoal.
+
+Para conectar um checkout sem remoto:
 
 ```sh
-git branch -M main
 git remote add origin git@github.com:nicholaspuchaf/nicholaspuchaf.github.io.git
-git add .
-git commit -m "Cria portfólio com deploy no GitHub Pages"
-git push -u origin main
 ```
 
-Se já houver `origin`, atualize com `git remote set-url origin git@github.com:nicholaspuchaf/nicholaspuchaf.github.io.git`. Os comandos acima pressupõem que o repositório já existe e que sua chave SSH está configurada no GitHub.
+Se origin já existir, use `git remote set-url origin git@github.com:nicholaspuchaf/nicholaspuchaf.github.io.git`.
 
-Cada push em `main` publica o site. Pull requests executam testes e build, sem publicar. Você também pode acionar o workflow manualmente na aba Actions. O workflow usa o `GITHUB_TOKEN` fornecido pelo GitHub; não é necessário cadastrar um token pessoal. A pasta `dist/` é gerada no CI e não precisa ser commitada.
+O adapter-static do SvelteKit pré-renderiza o início e todas as páginas dos projetos. Os links diretos funcionam no GitHub Pages, inclusive ao atualizar a página. O HTML já contém os projetos antes de carregar JavaScript; o Svelte hidrata a interface para ativar a navegação. O fallback 404.html trata URLs desconhecidas.
 
-Cada projeto tem seu próprio HTML em `/projetos/<slug>/`, permitindo acesso direto e atualização da página sem regras de SPA. Uma página `404.html` personalizada é incluída. Para gerar os arquivos localmente, execute `npm run build`.
+O domínio é de usuário, na raiz, sem prefixo de repositório. Não precisa de domínio personalizado ou CNAME.
 
 ## Conteúdo
 
-Descrições baseadas nas informações fornecidas por Nicholas e em `/home/nicholas/Documents/resume/contexto`. Detalhes técnicos ainda desconhecidos estão identificados nas páginas. A presença de um endereço não significa monitoramento da disponibilidade do serviço. Fontes do Google são opcionais: o layout usa fontes locais de fallback quando estiver offline. Os banners são feitos em HTML/CSS/SVG, sem imagens externas.
+Descrições baseadas nas informações fornecidas por Nicholas e no contexto do currículo. Detalhes ainda desconhecidos estão identificados nas páginas. O resume-maker foi deixado de fora. Os banners usam componentes Svelte, CSS e SVG. As fontes do Google são opcionais, com fontes locais de fallback.

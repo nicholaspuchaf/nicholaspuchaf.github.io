@@ -2,9 +2,9 @@ name: Publicar no GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
-    branches: [main]
+    branches: [main, master]
   workflow_dispatch:
 
 permissions:
@@ -24,10 +24,16 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '24'
+      - name: Configurar pnpm
+        uses: pnpm/action-setup@v4
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+      - name: Validar componentes Svelte
+        run: pnpm check
       - name: Validar projetos e páginas
-        run: npm test
+        run: pnpm test
       - name: Gerar site estático
-        run: npm run build
+        run: pnpm build
       - name: Configurar Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5

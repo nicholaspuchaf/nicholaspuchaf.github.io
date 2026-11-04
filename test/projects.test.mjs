@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { projects } from '../src/data.js';
-import { home, detail, escape } from '../src/render.js';
+import { filterProjects } from '../src/lib/projects.js';
+import { entries, load } from '../src/routes/projetos/[slug]/+page.js';
 
-test('cadastros possuem slugs únicos, conteúdo e links seguros', () => {
+test('projetos têm slugs únicos, conteúdo e links HTTPS', () => {
   assert.equal(new Set(projects.map(p => p.slug)).size, projects.length);
   for (const p of projects) {
     assert.match(p.slug, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
@@ -12,23 +13,23 @@ test('cadastros possuem slugs únicos, conteúdo e links seguros', () => {
     assert.ok(p.tags.length);
   }
 });
-test('todos os projetos possuem card e página com seções navegáveis', () => {
-  const html = home();
-  assert.equal((html.match(/class="project-card /g) || []).length, projects.length);
-  for (const p of projects) {
-    assert.ok(html.includes(`href="./projetos/${p.slug}/"`));
-    const page = detail(p);
-    assert.ok(page.includes(`<h1>${escape(p.name)}</h1>`));
-    for (const section of ['por-que','como','decisoes','infra','arquitetura']) assert.ok(page.includes(`id="${section}"`));
-    assert.ok(!page.includes('href="null"'));
-    assert.ok(!page.includes('undefined'));
-    if (!p.url) assert.ok(!page.includes('Visitar projeto'));
-    if (!p.github) assert.ok(!page.includes('Ver no GitHub'));
-  }
+test('busca ignora acentos, caixa e espaços e encontra tecnologias', () => {
+  assert.ok(filterProjects('Todos', '  ACOES  ').some(p => p.slug === 'comparador-de-acoes'));
+  assert.ok(filterProjects('Todos', 'lambda').some(p => p.slug === 'folha'));
+  assert.equal(filterProjects('Todos', 'projeto inexistente').length, 0);
+  assert.equal(filterProjects().length, projects.length);
 });
-test('texto dos cadastros é escapado antes de entrar no HTML', () => {
-  assert.equal(escape('<script>"&\'</script>'), '&lt;script&gt;&quot;&amp;&#39;&lt;/script&gt;');
-  const html = detail({...projects[0], name:'<img src=x onerror=alert(1)>', decisions:[['<script>', '<iframe>']]});
-  assert.ok(!html.includes('<img src=x'));
-  assert.ok(!html.includes('<iframe>'));
+test('categoria e busca funcionam em conjunto', () => {
+  assert.deepEqual(filterProjects('Mobile', 'android').map(p => p.slug), ['rigbify']);
+  assert.equal(filterProjects('Mobile', 'folha').length, 0);
+  assert.ok(filterProjects('IA aplicada').every(p => p.category === 'IA aplicada'));
+});
+test('todas as rotas são pré-renderizadas e carregam o projeto correto', () => {
+  assert.deepEqual(entries(), projects.map(p => ({ slug: p.slug })));
+  for (let index = 0; index < projects.length; index++) {
+    const data = load({ params: { slug: projects[index].slug } });
+    assert.equal(data.project.slug, projects[index].slug);
+    assert.equal(data.next.slug, projects[(index + 1) % projects.length].slug);
+  }
+  assert.throws(() => load({ params: { slug: 'nao-existe' } }), error => error.status === 404);
 });
