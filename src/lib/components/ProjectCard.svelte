@@ -1,10 +1,11 @@
 <script>
   import Icon from './Icon.svelte';
   import ProjectArt from './ProjectArt.svelte';
+  import { reveal } from '$lib/motion.js';
   let { project: p } = $props();
 </script>
 
-<article class="project-card theme-{p.theme}">
+<article class="project-card theme-{p.theme}" use:reveal>
   <a href="/projetos/{p.slug}/" class="banner" aria-label="Saiba mais sobre {p.name}">
     {#if p.screenshots?.length}
       <img class="banner-screenshot" src={p.screenshots[0].src} alt="" width={p.screenshots[0].width} height={p.screenshots[0].height} loading="lazy" decoding="async" />
@@ -13,6 +14,7 @@
     {/if}
   </a>
   <div class="card-body">
+    <span class="project-category">{p.category}</span>
     <div class="card-heading">
       <h3><a href="/projetos/{p.slug}/">{p.name}</a></h3>
       <span class:live={!!p.url} class="status" title={p.status}><i></i>{p.url ? 'No ar' : p.status === 'Em desenvolvimento' ? 'Em construção' : 'Projeto'}</span>

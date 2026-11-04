@@ -4,6 +4,7 @@
   import Icon from '$lib/components/Icon.svelte';
   import ArchitectureFlow from '$lib/components/ArchitectureFlow.svelte';
   import ProjectGallery from '$lib/components/ProjectGallery.svelte';
+  import { reveal } from '$lib/motion.js';
   let { data } = $props();
   let p = $derived(data.project);
   let sections = $derived([
@@ -34,7 +35,7 @@
 
 <main id="conteudo" class="detail theme-{p.theme}">
   <a class="back-link" href="/#projetos">← Todos os projetos</a>
-  <section class="detail-hero">
+  <section class="detail-hero" use:reveal>
     <div>
       <span class="eyebrow">{p.category} <span class="detail-dot">·</span> {p.status}</span>
       <h1>{p.name}</h1><h2>{p.tagline}</h2><p>{p.description}</p>

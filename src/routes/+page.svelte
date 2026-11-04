@@ -2,6 +2,7 @@
   import { projects, profile } from '../data.js';
   import ProjectCard from '$lib/components/ProjectCard.svelte';
   import Icon from '$lib/components/Icon.svelte';
+  import { reveal } from '$lib/motion.js';
 </script>
 
 <svelte:head>
@@ -15,11 +16,11 @@
 
 <main id="conteudo" class="linktree">
   <section class="projects-section" id="projetos">
-    <div class="section-heading"><h2>Meus projetos <span class="project-count">{projects.length}</span></h2><span>Feitos com curiosidade ↗</span></div>
+    <div class="section-heading"><div><span class="collection-label">IDEIAS. CÓDIGO. EXPERIÊNCIAS.</span><h2>Projetos<span class="heading-period">.</span></h2></div><span class="collection-count">{String(projects.length).padStart(2, '0')} projetos<br />Sempre em construção</span></div>
     <div class="project-list">{#each projects as project (project.slug)}<ProjectCard {project} />{/each}</div>
   </section>
-  <section class="profile" aria-label="Sobre Nicholas">
-    <span class="avatar" aria-hidden="true">nf<span>✳</span></span>
+  <section class="profile" aria-label="Sobre Nicholas" use:reveal>
+    <span class="avatar" aria-hidden="true">nf.</span>
     <h1>{profile.name}</h1>
     <span class="profile-handle">@nicholaspuchaf</span>
     <p>{profile.description}</p>
@@ -28,5 +29,5 @@
       <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn <Icon /></a>
     </div>
   </section>
-  <p class="closing-note">Mais ideias chegando. Um projeto de cada vez. <span aria-hidden="true">✳</span></p>
+  <p class="closing-note">Mais ideias chegando. Um projeto de cada vez.</p>
 </main>
