@@ -6,7 +6,11 @@
 
 <article class="project-card theme-{p.theme}">
   <a href="/projetos/{p.slug}/" class="banner" aria-label="Saiba mais sobre {p.name}">
-    <div class="banner-art"><ProjectArt kind={p.art} /></div>
+    {#if p.screenshots?.length}
+      <img class="banner-screenshot" src={p.screenshots[0].src} alt="" width={p.screenshots[0].width} height={p.screenshots[0].height} loading="lazy" decoding="async" />
+    {:else}
+      <div class="banner-art"><ProjectArt kind={p.art} /></div>
+    {/if}
   </a>
   <div class="card-body">
     <div class="card-heading">

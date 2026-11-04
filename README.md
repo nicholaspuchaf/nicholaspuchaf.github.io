@@ -50,6 +50,26 @@ Use um slug único em minúsculas, sem espaços ou acentos. A categoria aparece 
 
 Temas: `leaf`, `blue`, `peach`, `lime`, `space`, `lavender`, `sand`, `rose`, `mint`.
 
+As páginas mais completas também usam campos opcionais: `capabilities` (pares de título e descrição), `workflow` (passos de uso), `infrastructureComponents` (pares de componente e responsabilidade), `architectureFlows` (objetos com `title`, `steps` e `description`), `quality` (texto) e `limitations` (lista). Esses campos geram os blocos detalhados; projetos sem eles continuam usando o formato simples. A seção de qualidade aparece automaticamente no índice quando `quality` é preenchido.
+
+As fontes e os limites da revisão técnica estão em [docs/fontes-dos-projetos.md](docs/fontes-dos-projetos.md).
+
+Para adicionar capturas reais, coloque os arquivos em `static/projetos/<slug>/` e acrescente `screenshots` ao cadastro:
+
+```js
+screenshots: [{
+  src: '/projetos/meu-projeto/tela.png',
+  alt: 'Descrição do que aparece na tela.',
+  caption: 'Contexto da funcionalidade demonstrada.',
+  width: 1440,
+  height: 900,
+}]
+```
+
+A primeira captura aparece no banner da lista e na capa; todas aparecem na galeria, com acesso ao arquivo original. Sem capturas, o banner continua usando a ilustração. Use as dimensões reais para reservar o espaço da imagem durante o carregamento.
+
+`designPatterns` recebe entradas `[título, explicação, referência no código]`. `continuousIntegration` descreve o pipeline (`flow`), as verificações (`checks`), as proteções (`safeguards`), o hook local, a preparação, o deploy e os limites. Veja o cadastro do Folha como exemplo completo. As seções e sua numeração entram no índice automaticamente.
+
 Banners: `cards`, `document`, `reader`, `finance`, `orbit`, `link`, `chart`, `blog`, `music`. Para criar outro, edite `src/lib/components/ProjectArt.svelte` e `src/app.css`.
 
 ## Estrutura
